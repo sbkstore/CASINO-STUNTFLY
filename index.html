@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Stuntfly | iOS Style</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --bg-black: #000000;
+            --apple-dark: #1c1c1e;
+            --apple-gray: #2c2c2e;
+            --accent-blue: #0A84FF;
+            --text-main: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --apple-red: #FF453A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            margin: 0;
+            padding-bottom: 90px;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- LOGIN --- */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-black); z-index: 10000;
+            display: none; align-items: center; justify-content: center; padding: 25px;
+        }
+
+        .login-card {
+            width: 100%; max-width: 380px; text-align: center;
+            background: rgba(28, 28, 30, 0.7); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            padding: 50px 30px; border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            opacity: 0; transform: scale(0.95);
+            animation: iosIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes iosIn { to { opacity: 1; transform: scale(1); } }
+
+        .login-logo { font-size: 2.8rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 5px; }
+
+        .input-group-custom {
+            background: rgba(0, 0, 0, 0.4); border-radius: 18px;
+            margin-bottom: 12px; display: flex; align-items: center; padding: 4px 18px;
+        }
+        .input-group-custom i { color: var(--text-secondary); font-size: 1.1rem; margin-right: 12px; }
+        
+        .login-input {
+            background: transparent !important; border: none !important;
+            color: white !important; padding: 15px 0 !important; box-shadow: none !important;
+        }
+
+        #loginBtn {
+            background: #fff; color: #000; border: none; border-radius: 18px;
+            padding: 16px; font-weight: 800; width: 100%; margin-top: 15px;
+            transition: opacity 0.2s;
+        }
+        #loginBtn:active { opacity: 0.8; transform: scale(0.98); }
+
+        .ws-link {
+            display: block; margin-top: 30px; color: var(--accent-blue);
+            text-decoration: none; font-size: 0.9rem; font-weight: 500;
+        }
+
+        /* --- UI --- */
+        header {
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);
+            padding: 15px 20px; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 1000;
+        }
+        .balance-box {
+            background: var(--apple-dark); padding: 5px 12px;
+            border-radius: 12px; font-size: 0.9rem; border: 1px solid var(--apple-gray);
+        }
+
+        .content-section { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CATEGORÍAS --- */
+        .category-scroller {
+            display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px 0;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .category-scroller::-webkit-scrollbar { display: none; }
+        
+        .cat-btn {
+            background: var(--apple-dark); color: white; border: none;
+            padding: 8px 20px; border-radius: 20px; font-size: 0.85rem;
+            font-weight: 600; white-space: nowrap; transition: 0.2s;
+        }
+        .cat-btn.active { background: white; color: black; }
+
+        /* --- JUEGOS --- */
+        .game-card {
+            background: var(--apple-dark); border-radius: 18px; overflow: hidden;
+            border: 1px solid var(--apple-gray); transition: transform 0.2s;
+            text-decoration: none; display: block;
+        }
+        .game-card:active { transform: scale(0.95); }
+        .game-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .game-title { padding: 10px; font-size: 0.75rem; text-align: center; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
+
+        /* --- BOTÓN RETIRO PROFESIONAL --- */
+        .withdraw-btn {
+            background: white; color: black; border: none; border-radius: 20px;
+            padding: 18px; font-weight: 800; width: 100%; display: flex;
+            align-items: center; justify-content: center; gap: 12px;
+            margin-top: 25px; transition: transform 0.2s, opacity 0.2s;
+            text-decoration: none; font-size: 1rem;
+        }
+        .withdraw-btn:active { transform: scale(0.96); opacity: 0.9; }
+        .withdraw-btn i { font-size: 1.4rem; }
+
+        /* --- TAB BAR --- */
+        .tab-bar {
+            position: fixed; bottom: 0; width: 100%; background: rgba(28, 28, 30, 0.9);
+            backdrop-filter: blur(25px); display: flex; justify-content: space-around;
+            padding: 10px 0 30px 0; border-top: 0.5px solid rgba(255,255,255,0.1); z-index: 2000;
+        }
+        .tab-item { color: var(--text-secondary); text-align: center; font-size: 0.65rem; flex: 1; cursor: pointer; }
+        .tab-item i { font-size: 1.5rem; display: block; margin-bottom: 2px; }
+        .tab-item.active { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <h2 class="login-logo">STUNTFLY</h2>
+            <p class="text-secondary mb-4 small">Ingresa para continuar</p>
+            
+            <div class="input-group-custom">
+                <i class="bi bi-person-fill"></i>
+                <input type="text" id="userIn" class="form-control login-input" placeholder="Usuario">
+            </div>
+
+            <div class="input-group-custom">
+                <i class="bi bi-lock-fill"></i>
+                <input type="password" id="passIn" class="form-control login-input" placeholder="Contraseña">
+            </div>
+
+            <button id="loginBtn" onclick="handleLogin()">ENTRAR</button>
+            <p id="login-err" class="text-danger mt-3 small" style="display:none;"></p>
+
+            <a href="https://wa.me/5491122334455?text=Hola!%20Quiero%20crear%20un%20usuario" class="ws-link">
+                ¿No tenés cuenta? Pedila acá
+            </a>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand fw-bold">Stuntfly</div>
+        <div class="balance-box">
+            <span style="color: #34C759; margin-right: 5px;">$</span><span id="bal-header">0.00</span>
+        </div>
+    </header>
+
+    <div id="games" class="content-section active">
+        <h1>Explorar</h1>
+
+        <div class="category-scroller">
+            <button class="cat-btn active" onclick="filterGames('todos', this)">Todos</button>
+            <button class="cat-btn" onclick="filterGames('minis', this)">Minijuegos</button>
+            <button class="cat-btn" onclick="filterGames('slots', this)">Slots</button>
+            <button class="cat-btn" onclick="filterGames('vivo', this)">En Vivo</button>
+        </div>
+
+        <div class="row g-3" id="game-container">
+            <div class="col-6 g-item g-minis"><a href="dragontower.html" class="game-card"><img src="juegos/dragon.jpg" alt="Dragon Tower"><div class="game-title">DRAGON TOWER</div></a></div>
+            <div class="col-6 g-item g-minis"><a href="blackjack.html" class="game-card"><img src="juegos/blackjack.jpg" alt="Blackjack"><div class="game-title">BLACKJACK</div></a></div>
+            <div class="col-6 g-item g-minis"><a href="roulette.html" class="game-card"><img src="juegos/roulette.jpg" alt="Roulette"><div class="game-title">ROULETTE</div></a></div>
+            <div class="col-6 g-item g-minis"><a href="mine.html" class="game-card"><img src="juegos/mine.jpg" alt="mine"><div class="game-title">MINAS</div></a></div>
+            <div class="col-6 g-item g-minis"><a href="slots/penalty.html" class="game-card"><img src="juegos/penalty.jpg" alt="penalty"><div class="game-title">PENALTY</div></a></div>
+            <div class="col-6 g-item g-minis"><a href="slots/aviator.html" class="game-card"><img src="juegos/aviator.jpg" alt="aviator"><div class="game-title">AVIATOR</div></a></div>
+            <div class="col-6 g-item g-vivo"><a href="blackjackenvivo.html" class="game-card"><img src="juegos/blackjack2.jpg" alt="blackjack vivo"><div class="game-title">BLACKJACK LIVE</div></a></div>
+            <div class="col-6 g-item g-slots"><a href="slots/mineslot.html" class="game-card"><img src="juegos/mineslot.jpg" alt="mineslot"><div class="game-title">MINESLOT</div></a></div>
+            <div class="col-6 g-item g-slots"><a href="slots/jokerjewels.html" class="game-card"><img src="juegos/jokerjewels.jpg" alt="jokerjewels"><div class="game-title">JOKER JEWELS</div></a></div>
+            <div class="col-6 g-item g-slots"><a href="slots/gateofolympus.html" class="game-card"><img src="juegos/gatesofolympus.jpg" alt="gates of olympus"><div class="game-title">GATES OF OLYMPUS</div></a></div>
+        </div>
+    </div>
+
+    <div id="wallet" class="content-section">
+        <h1>Billetera</h1>
+        <div class="p-4 text-center" style="background: var(--apple-dark); border-radius: 20px; border: 1px solid var(--apple-gray);">
+            <p class="text-secondary mb-1">Balance Total</p>
+            <h2 class="mb-0 fw-bold">$<span id="bal-wallet">0.00</span> ARS</h2>
+        </div>
+
+        <a href="retiro.html" class="withdraw-btn">
+            <i class="bi bi-bank"></i>
+            Retirar Saldo
+        </a>
+    </div>
+
+    <div id="profile" class="content-section">
+        <h1>Cuenta</h1>
+        <div class="list-group list-group-flush" style="border-radius: 20px; overflow: hidden;">
+            <div class="list-group-item bg-dark text-white border-secondary p-3"><i class="bi bi-person me-3"></i> <span id="user-display">...</span></div>
+            <div class="list-group-item bg-dark text-white border-secondary p-3 text-danger" onclick="logoutApp()" style="cursor:pointer;">
+                <i class="bi bi-box-arrow-right me-3"></i> Cerrar Sesión
+            </div>
+        </div>
+    </div>
+
+    <nav class="tab-bar">
+        <div class="tab-item active" onclick="showSection('games', this)"><i class="bi bi-grid-fill"></i>Juegos</div>
+        <div class="tab-item" onclick="showSection('wallet', this)"><i class="bi bi-wallet2"></i>Cartera</div>
+        <div class="tab-item" onclick="showSection('profile', this)"><i class="bi bi-person-circle"></i>Perfil</div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD40SqIpz4EFvTlHlbs4Amm9H4I2NKqgDE",
+            authDomain: "login-c4685.firebaseapp.com",
+            projectId: "login-c4685",
+            databaseURL: "https://login-c4685-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Lógica de filtrado
+        window.filterGames = (cat, btn) => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const items = document.querySelectorAll('.g-item');
+            items.forEach(i => {
+                i.style.display = 'none';
+                if(cat === 'todos') i.style.display = 'block';
+                else if(cat === 'minis' && i.classList.contains('g-minis')) i.style.display = 'block';
+                else if(cat === 'slots' && i.classList.contains('g-slots')) i.style.display = 'block';
+                else if(cat === 'vivo' && i.classList.contains('g-vivo')) i.style.display = 'block';
+            });
+        };
+
+        function resetUI() {
+            document.getElementById('bal-header').innerText = "0.00";
+            document.getElementById('bal-wallet').innerText = "0.00";
+            document.getElementById('user-display').innerText = "...";
+        }
+
+        window.handleLogin = async () => {
+            const u = document.getElementById('userIn').value.trim().toLowerCase();
+            const p = document.getElementById('passIn').value.trim();
+            const err = document.getElementById('login-err');
+            if(!u || !p) return;
+            try {
+                resetUI();
+                await signOut(auth); 
+                const res = await signInWithEmailAndPassword(auth, `${u}@nexus.com`, p);
+                const userDoc = await get(ref(db, `usuarios/${res.user.uid}`));
+                if(!userDoc.exists()){
+                    await signOut(auth);
+                    throw new Error("Denegado.");
+                }
+                err.style.display = 'none';
+            } catch (e) {
+                err.innerText = "Error: Credenciales inválidas.";
+                err.style.display = 'block';
+            }
+        };
+
+        window.logoutApp = () => { resetUI(); signOut(auth); };
+
+        onAuthStateChanged(auth, (user) => {
+            const overlay = document.getElementById('login-overlay');
+            if (user) {
+                if(!user.email.endsWith('@nexus.com')) return logoutApp();
+                overlay.style.display = 'none';
+                document.getElementById('user-display').innerText = user.email.split('@')[0].toUpperCase();
+                onValue(ref(db, `usuarios/${user.uid}/balance`), (snap) => {
+                    const b = snap.val() || 0;
+                    document.getElementById('bal-header').innerText = parseFloat(b).toFixed(2);
+                    document.getElementById('bal-wallet').innerText = parseFloat(b).toFixed(2);
+                });
+            } else {
+                overlay.style.display = 'flex';
+                resetUI();
+            }
+        });
+
+        window.showSection = (id, el) => {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(el) el.classList.add('active');
+        };
+    </script>
+</body>
+</html>
